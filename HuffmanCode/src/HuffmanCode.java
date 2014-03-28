@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +14,7 @@ public class HuffmanCode {
 
 	private Queue<HuffmanNode> nodesList = new PriorityQueue<HuffmanNode>(100,
 			comparator);
+	public int[] statisticFrequency = new int[1000];
 
 	private HuffmanNode root = null;
 
@@ -42,6 +42,12 @@ public class HuffmanCode {
 	public void preFrequency(List<IPAddress> IPList) {
 		for (IPAddress ip : IPList) {
 			nodesList.add(new Prefix(ip.getFrequency()));
+			statisticFrequency[ip.getFrequency()]++;
+		}
+		for (int i = 0; i < statisticFrequency.length; i++) {
+			if (statisticFrequency[i] != 0) {
+				System.out.println(i + ":" + statisticFrequency[i]);
+			}
 		}
 		logger.info("Number of entries:" + IPList.size());
 		// TODO
@@ -106,11 +112,15 @@ public class HuffmanCode {
 
 	private void print(HuffmanNode node, int index) {
 		if (node instanceof InnerNode) {
-			System.out.println("InnerNode" + index + ":" + node.getFrequency()
-					+ "(" + node.getCode() + ")");
+			// System.out.println("InnerNode" + index + ":" +
+			// node.getFrequency() + "(" + node.getCode() + ")");
 		} else {
-			logger.info("Prefix" + index + ":" + node.getFrequency() + "("
-					+ node.getCode() + ")" + ((Prefix) node).originalCode);
+			logger.info("Prefix" + index + ":" + node.getFrequency()
+			// + "("
+			// + node.getCode()
+			// + ")"
+			// + ((Prefix) node).originalCode
+			);
 			// System.out
 			// .println("Prefix" + index + ":" + node.getFrequency() + "("
 			// + node.getCode() + ")"
@@ -121,10 +131,8 @@ public class HuffmanCode {
 
 	private void buildTree() {
 		// TODO Auto-generated method stub
-		// Collections.sort(nodesList, comparator);
-		logger.info("Huffman Code has been sorted!");
 		while (nodesList.size() > 1) {
-			//logger.info("num:" + nodesList.size());
+			// logger.info("num:" + nodesList.size());
 			HuffmanNode left = nodesList.remove();
 			HuffmanNode right = nodesList.remove();
 			HuffmanNode parent = new InnerNode(left, right);
